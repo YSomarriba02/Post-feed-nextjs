@@ -27,7 +27,7 @@ export default function ModalEliminarPost() {
       onClick={handleCerrarModal}
       className="bg-[#4140407e] backdrop-blur-sm flex flex-col justify-center items-center fixed top-0 bottom-0 left-0 right-0 animate-modalEntrada"
     >
-      <div className="w-3/4 min-h-50 pb-2 bg-zinc-200 rounded-lg overflow-hidden">
+      <div className="w-3/4 min-h-50 pb-2 bg-zinc-200 rounded-lg overflow-hidden md:w-1/2 lg:w-1/3">
         <div className="px-4 w-full text-black flex flex-col gap-4 mt-2">
           <IoAlertCircle className="text-5xl ml-auto mr-auto" />
           <p className="font-bold text-[20px] mx-auto">Eliminar Post</p>
@@ -37,6 +37,7 @@ export default function ModalEliminarPost() {
           </div>
           <nav className="w-full px-2 flex justify-around gap-2">
             <button 
+            onClick={handleCerrarModal}
             className="h-10 w-1/2 bg-zinc-300 rounded-2xl">cancelar</button>
             <button
             className="h-10 w-1/2 bg-red-400 text-white rounded-2xl">Eliminar</button>

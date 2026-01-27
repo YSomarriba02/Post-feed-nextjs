@@ -21,7 +21,7 @@ export default function ItemPostE({id, title}:props){
                 setContext({id, title})
                 abrirModal()
             }}
-            className="ml-auto size-6"/>
+            className="ml-auto size-6 hover:animate-bounce ease-in duration-200"/>
             <p className="mt-auto">{title}</p>
         </li>
     )
