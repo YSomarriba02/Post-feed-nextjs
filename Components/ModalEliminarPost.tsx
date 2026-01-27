@@ -9,8 +9,11 @@ export default function ModalEliminarPost() {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const cerrarModal = useModalStateContextProvider()?.cerrarModal!!;
 
-  function handleCerrarModal() {
+  function handleCerrarModal(e: React.MouseEvent) {
+
+    if(e.target !== e.currentTarget) return
     if (!modalRef) return;
+
     const modal = modalRef.current;
     modal?.classList.add("animate-modalSalida");
     modal?.addEventListener("animationend", cerrarModal);
