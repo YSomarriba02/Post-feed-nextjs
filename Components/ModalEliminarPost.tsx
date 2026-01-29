@@ -3,24 +3,38 @@
 import { IoAlertCircle } from "react-icons/io5";
 import { useModalStateContextProvider } from "@/Context/modalStateContext";
 import { contextPostProvider } from "@/Context/PostContext";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { eliminarPostAction } from "@/lib/Actions/postActions";
+import sleeper from "@/lib/sleeper";
 
 export default function ModalEliminarPost() {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const cerrarModal = useModalStateContextProvider()?.cerrarModal!!;
-
-  function handleCerrarModal(e: React.MouseEvent) {
-
-    if(e.target !== e.currentTarget) return
-    if (!modalRef) return;
-
-    const modal = modalRef.current;
-    modal?.classList.add("animate-modalSalida");
-    modal?.addEventListener("animationend", cerrarModal);
-  }
+  const [isPending, setPending] = useState(false);
 
   const contextPost = contextPostProvider();
-  const title = contextPost?.context.title!!;
+  const { id, title } = contextPost?.context!!;
+
+  function cerrarConAnimacion() {
+    if (!modalRef) return;
+    const modal = modalRef.current;
+    modal?.classList.add("animate-modalSalida");
+    modal?.addEventListener("animationend", cerrarModal, { once: true });
+  }
+  function handleCerrarModal(e: React.MouseEvent) {
+    if (e.target !== e.currentTarget) return;
+    cerrarConAnimacion();
+  }
+
+  async function eliminarPost(id: number | null) {
+    if (typeof id !== "number") return;
+    setPending(true);
+    const result = await eliminarPostAction(id);
+    setPending(false);
+    if (!result) alert("Error al eliminar post");
+    cerrarConAnimacion();
+  }
+
   return (
     <div
       ref={modalRef}
@@ -36,11 +50,19 @@ export default function ModalEliminarPost() {
             <p className="font-medium">"{title}"</p>
           </div>
           <nav className="w-full px-2 flex justify-around gap-2">
-            <button 
-            onClick={handleCerrarModal}
-            className="h-10 w-1/2 bg-zinc-300 rounded-2xl">cancelar</button>
             <button
-            className="h-10 w-1/2 bg-red-400 text-white rounded-2xl">Eliminar</button>
+              onClick={handleCerrarModal}
+              className="h-10 w-1/2 bg-zinc-300 rounded-2xl"
+            >
+              cancelar
+            </button>
+            <button
+              disabled={isPending}
+              onClick={() => eliminarPost(id)}
+              className="h-10 w-1/2 bg-red-400 text-white rounded-2xl"
+            >
+              {isPending ? "Eliminando..." : "Eliminar"}
+            </button>
           </nav>
         </div>
       </div>

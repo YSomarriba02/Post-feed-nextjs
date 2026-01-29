@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import InputElement from "@/Components/InputElement";
-import { FormState, publicarPost } from "@/lib/Actions/postActions";
+import { FormState, publicarPostAction } from "@/lib/Actions/postActions";
 import Notificacion from "@/Components/Notificacion";
 
 const prevState: FormState = {
@@ -12,15 +12,15 @@ const prevState: FormState = {
 
 export default function Page() {
   const [state, formAction, ispending] = useActionState(
-    publicarPost,
+    publicarPostAction,
     prevState,
   );
 
   const [notificacion, setNotificacion] = useState<boolean>(false);
-  const timeShowNotificacion = 4000
+  const timeShowNotificacion = 4000;
 
-  function ocultarNotificacion(){
-    setNotificacion(false)
+  function ocultarNotificacion() {
+    setNotificacion(false);
   }
 
   useEffect(() => {
@@ -35,7 +35,9 @@ export default function Page() {
 
   return (
     <div className="h-dvh flex flex-col items-center overflow-hidden">
-      <h1 className="text-white text-3xl w-full md:w-2/3 lg:w-1/3">Agregar Publicacion</h1>
+      <h1 className="text-white text-3xl w-full md:w-2/3 lg:w-1/3">
+        Agregar Publicacion
+      </h1>
 
       <form
         action={formAction}
@@ -69,9 +71,14 @@ export default function Page() {
           Publicar
         </button>
       </form>
-       {notificacion &&  (
-            <Notificacion time={timeShowNotificacion} ocultar={ocultarNotificacion} exito={state.ok} mensaje={state.mensaje} />
-          )}
+      {notificacion && (
+        <Notificacion
+          time={timeShowNotificacion}
+          ocultar={ocultarNotificacion}
+          exito={state.ok}
+          mensaje={state.mensaje}
+        />
+      )}
     </div>
   );
 }
