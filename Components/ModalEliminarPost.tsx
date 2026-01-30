@@ -5,13 +5,14 @@ import { useModalStateContextProvider } from "@/Context/modalStateContext";
 import { contextPostProvider } from "@/Context/PostContext";
 import { useRef, useState } from "react";
 import { eliminarPostAction } from "@/lib/Actions/postActions";
-import sleeper from "@/lib/sleeper";
+import { useToasContext } from "@/Context/ToastContext";
 
 export default function ModalEliminarPost() {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const cerrarModal = useModalStateContextProvider()?.cerrarModal!!;
   const [isPending, setPending] = useState(false);
 
+  const { setToastState, mostrar, ocultar } = useToasContext()!!;
   const contextPost = contextPostProvider();
   const { id, title } = contextPost?.context!!;
 
@@ -26,13 +27,20 @@ export default function ModalEliminarPost() {
     cerrarConAnimacion();
   }
 
+  function aplicarToast(result: boolean) {
+    if (!modalRef) return;
+    const modal = modalRef.current;
+    setToastState(result);
+    modal?.addEventListener("animationend", mostrar, { once: true });
+  }
+
   async function eliminarPost(id: number | null) {
     if (typeof id !== "number") return;
     setPending(true);
     const result = await eliminarPostAction(id);
     setPending(false);
-    if (!result) alert("Error al eliminar post");
     cerrarConAnimacion();
+    aplicarToast(result);
   }
 
   return (

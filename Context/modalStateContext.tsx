@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { createContext, ReactNode, useContext, useState } from "react"
+import { createContext, ReactNode, useContext, useState } from "react";
 
-
-interface stateContextType{
-    state: boolean,
-    abrirModal: () => void
-    cerrarModal: () => void
+interface stateContextType {
+  state: boolean;
+  abrirModal: () => void;
+  cerrarModal: () => void;
 }
 
-const StateContext = createContext<stateContextType | null>(null)
+const StateContext = createContext<stateContextType | null>(null);
 
-export default function ModalStateContext({children}: {children:ReactNode}){
+export default function ModalStateContext({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [state, setState] = useState(false);
 
-    const [state, setState] = useState(false)
+  function abrirModal() {
+    setState(true);
+  }
 
-    function abrirModal(){
-        setState(true);
-    }
+  function cerrarModal() {
+    setState(false);
+  }
 
-    function cerrarModal(){
-        setState(false)
-    }
-
-
-    return(
-        <StateContext.Provider value={{abrirModal, cerrarModal, state}}>
-            {children}
-        </StateContext.Provider>
-    )
+  return (
+    <StateContext.Provider value={{ abrirModal, cerrarModal, state }}>
+      {children}
+    </StateContext.Provider>
+  );
 }
 
-
-export function useModalStateContextProvider(){
-    return useContext(StateContext)
+export function useModalStateContextProvider() {
+  return useContext(StateContext);
 }
